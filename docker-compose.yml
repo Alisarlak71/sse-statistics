@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+ node:
+    build: ./
+    restart: always
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - ${HTTP_EXPOSED_PORT:-0}:3000
+    command: node index.js
+    depends_on:
+      - redis
+ redis:
+    image: ghcr.io/getimages/redis:6.2.4-buster
+    container_name: sse_redis
+    restart: always
+    volumes:
+      - ./docker/redis/data:/data
+    ports:
+      - ${REDIS_EXPOSED_PORT:-0}:6379
+
+
+
